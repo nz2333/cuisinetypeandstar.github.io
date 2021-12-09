@@ -266,10 +266,4 @@ In South America, the top rated cuisine type is Modern food.
 Overall, French cuisine type has a relatively high star ratings. It was surprising to see that French has the second highest star ratings in Asia, and Other Asian had the highest star ratings in North America. 
 
 
-data2 = data %>%
-  group_by(cuisine_new, star) %>%
-  mutate(Number = summarize(n()))%>%
-  ggplot(aes(x = cuisine_new, y = Number, color = star))+
-  geom_bar(fill = star)
-
 
