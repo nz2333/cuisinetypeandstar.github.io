@@ -1,0 +1,6 @@
+name: "Cuisine type and star ratings"
+output_dir: "."
+
+output:
+  html_document:
+    theme: cosmo
