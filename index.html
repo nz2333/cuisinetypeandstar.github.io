@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Cuisine type and star ratings</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Cuisine type and star ratings</h1>
+
+</div>
+
+
+<div id="average-star-ratings-for-each-cuisine-type-at-baseline" class="section level2">
+<h2>Average Star Ratings for each Cuisine Type at Baseline</h2>
+<p>In total, there are 70 cuisine types at baseline. The average star rating for each cuisine type is shown as the following:</p>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Hunanese and Sichuan, Japanese Contemporary, and Sichuan-Huai Yang are the top three cuisine types with 3 stars rating.</p>
+</div>
+<div id="collapsing-cuisine-types-into-simpler-categories" class="section level2">
+<h2>Collapsing cuisine types into simpler categories</h2>
+<p>Baseline cuisine types are being re-categorized into 19 new cuisine types mainly by country and continent. Cuisine types with only 1 observation is being added into a larger category that is relevant:</p>
+<ol style="list-style-type: decimal">
+<li>American: American, Californian</li>
+<li>Australian: Australian</li>
+<li>Other_Asian: Asian, Asian contemporary, Asian influences, Peranakan</li>
+<li>Chinese: Cantonese, Hang Zhou, Sichuan, Sichuan-Huai Yang, Cantonese Roast Meats, Fujian, Hunanese and Sichuan, Chinese, Shanghainese, Taiwanese, Dim Sum, Taizhou, Noodles and congee</li>
+<li>French: Classic French, French contemporary, Creative French, French, Modern French</li>
+<li>British: Creative British, Traditional British, Modern British</li>
+<li>Other_European: European, European contemporary, Austrian, Danish, Finnish</li>
+<li>Meats: Meats and grills, Barbecue</li>
+<li>Modern: modern, Contemporary, creative, Fusion, Modern cuisine, Creative, Gastropub, Innovative</li>
+<li>Other: International, Street Food, Temple cuisine, Seafood, Vegetarian, Classic cuisine, Market cuisine, Regional cuisine, Steakhouse, Moroccan</li>
+<li>Japanese: Japanese contemporary, Sushi, Teppanyaki, Japanese</li>
+<li>Scandinavian: Scandinavian</li>
+<li>Italian: Italian, Italian contemporary</li>
+<li>Korean: Korean, Korean contemporary</li>
+<li>Mediterranean: Mediterranean, Mediterranean cuisine</li>
+<li>Thai: Thai, Southern Thai, Thai Contemporary</li>
+<li>Indian: Indian</li>
+<li>Spanish: Spanish</li>
+<li>Mexican: Mexican</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th align="left">cuisine_new</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Australian</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Meats</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Spanish</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Mediterranean</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">Scandinavian</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">Other_Asian</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Mexican</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">Other_European</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">Indian</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">Korean</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">Thai</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">Italian</td>
+<td align="right">22</td>
+</tr>
+<tr class="odd">
+<td align="left">American</td>
+<td align="right">24</td>
+</tr>
+<tr class="even">
+<td align="left">Other</td>
+<td align="right">43</td>
+</tr>
+<tr class="odd">
+<td align="left">British</td>
+<td align="right">47</td>
+</tr>
+<tr class="even">
+<td align="left">French</td>
+<td align="right">57</td>
+</tr>
+<tr class="odd">
+<td align="left">Chinese</td>
+<td align="right">71</td>
+</tr>
+<tr class="even">
+<td align="left">Japanese</td>
+<td align="right">74</td>
+</tr>
+<tr class="odd">
+<td align="left">Modern</td>
+<td align="right">271</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="relationship-between-cuisine-type-and-star-ratings" class="section level2">
+<h2>Relationship between cuisine type and star ratings</h2>
+<p>The relationship between new cuisine type and star ratings is shown in the following graph:</p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Among the 19 cuisine types worldwide, French and Korean have the highest rating stars.</p>
+</div>
+<div id="separated-by-continent" class="section level2">
+<h2>Separated by continent:</h2>
+<div id="asia" class="section level3">
+<h3>Asia</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>In Asia, the top two rated cuisine types are still Korean and French, same to the top two rated cuisine types worldwide.</p>
+</div>
+<div id="europe" class="section level3">
+<h3>Europe</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>In Europe, the top two rated cuisine types are Japanese and French.</p>
+</div>
+<div id="north-america" class="section level3">
+<h3>North America</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>In North America, the top two rated cuisine types are Scandinavian and Other Asian.</p>
+</div>
+<div id="south-america" class="section level3">
+<h3>South America</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>In South America, the top rated cuisine type is Modern food.</p>
+<p>Overall, French cuisine type has a relatively high star ratings. It was surprising to see that French has the second highest star ratings in Asia, and Other Asian had the highest star ratings in North America.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
