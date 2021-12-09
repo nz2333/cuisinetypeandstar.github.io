@@ -129,8 +129,8 @@ data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
   labs(
     title = "Average Rating Stars for each Cuisine type",
-    x = "Average Rating Stars", 
-    y = "Cuisine type"
+    y = "Average Rating Stars", 
+    x = "Cuisine type"
   )
 
 continent = data %>%
@@ -164,8 +164,8 @@ Asia = data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
   labs(
     title = "Average Rating Stars for each Cuisine type in Asia",
-    x = "Average Rating Stars", 
-    y = "Cuisine type"
+    y = "Average Rating Stars", 
+    x = "Cuisine type"
   )
 
 Asia
@@ -194,8 +194,8 @@ Europe = data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
   labs(
     title = "Average Rating Stars for each Cuisine type in Europe",
-    x = "Average Rating Stars", 
-    y = "Cuisine type"
+    y = "Average Rating Stars", 
+    x = "Cuisine type"
   )
 
 Europe
@@ -224,8 +224,8 @@ North_America = data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
   labs(
     title = "Average Rating Stars for each Cuisine type in North America",
-    x = "Average Rating Stars", 
-    y = "Cuisine type"
+    y = "Average Rating Stars", 
+    x = "Cuisine type"
   )
 
 North_America
@@ -254,8 +254,8 @@ South_America = data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
   labs(
     title = "Average Rating Stars for each Cuisine type in South America",
-    x = "Average Rating Stars", 
-    y = "Cuisine type"
+    y = "Average Rating Stars", 
+    x = "Cuisine type"
   )
 
 South_America
