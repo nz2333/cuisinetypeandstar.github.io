@@ -1,0 +1,275 @@
+---
+title: "Cuisine type and star ratings"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+---
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+library(tidyverse)
+data = read.csv("./michelin.csv")
+```
+
+## Average Star Ratings for each Cuisine Type at Baseline
+
+In total, there are 70 cuisine types at baseline. The average star rating for each cuisine type is shown as the following:
+
+```{r echo = FALSE, warning=FALSE}
+data %>%
+  mutate(cuisine  = as.factor(cuisine), 
+         star = as.factor(star)) %>%
+  mutate(star = recode(star, "one" = "1", "two" = "2", "three" = "3")) %>%
+  mutate(
+    star = as.numeric(star)) %>%
+  group_by(cuisine) %>%
+  summarize(avg_star = mean(star)) %>%
+  mutate(
+    cuisine = fct_reorder(cuisine, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.3, hjust = 0.3))+
+  labs(
+    title = "Average Rating Stars for each Baseline Cuisine type",
+    x = "Baseline Cuisine type", 
+    y = "Average Stars"
+  )
+
+cuisine = data %>%
+  group_by(cuisine) %>%
+  summarize(n())
+```
+
+Hunanese and Sichuan, Japanese Contemporary, and Sichuan-Huai Yang are the top three cuisine types with 3 stars rating. 
+
+## Collapsing cuisine types into simpler categories
+
+Baseline cuisine types are being re-categorized into 19 new cuisine types mainly by country and continent. Cuisine types with only 1 observation is being added into a larger category that is relevant:
+
+1. American: American, Californian
+2. Australian: Australian
+3. Other_Asian: Asian, Asian contemporary, Asian influences, Peranakan
+4. Chinese: Cantonese, Hang Zhou, Sichuan, Sichuan-Huai Yang, Cantonese Roast Meats,             Fujian, Hunanese and Sichuan, Chinese, Shanghainese, Taiwanese, Dim Sum,             Taizhou, Noodles and congee
+5. French: Classic French, French contemporary, Creative French, French, Modern French
+6. British: Creative British, Traditional British, Modern British
+7. Other_European: European, European contemporary, Austrian, Danish, Finnish
+8. Meats: Meats and grills, Barbecue
+9. Modern: modern, Contemporary, creative, Fusion, Modern cuisine, Creative,                     Gastropub, Innovative
+10. Other: International, Street Food, Temple cuisine, Seafood, Vegetarian, Classic                cuisine, Market cuisine, Regional cuisine, Steakhouse, Moroccan
+11. Japanese: Japanese contemporary, Sushi, Teppanyaki, Japanese
+12. Scandinavian: Scandinavian
+13. Italian: Italian, Italian contemporary
+14. Korean: Korean, Korean contemporary
+15. Mediterranean: Mediterranean, Mediterranean cuisine
+16. Thai: Thai, Southern Thai, Thai Contemporary
+17. Indian: Indian
+18. Spanish: Spanish
+19. Mexican: Mexican
+
+```{r echo = FALSE, warning=FALSE}
+data = data %>%
+  mutate(
+    cuisine_new = fct_collapse(cuisine,
+                   American = c("American", "Californian"), 
+                   Australian = c("Australian"),
+                   Other_Asian = c("Asian", "Asian contemporary", "Asian influences", "Peranakan"),
+                   Chinese = c("Cantonese", "Hang Zhou", "Sichuan", "Sichuan-Huai Yang", "Cantonese Roast Meats", "Fujian", "Hunanese and Sichuan", "Chinese", "Shanghainese", "Taiwanese", "Dim Sum", "Taizhou", "Noodles and congee"), 
+                   French = c("Classic French", "French contemporary", "Creative French", "French", "Modern French"),
+                   British = c("Creative British", "Traditional British", "Modern British"), 
+                   Other_European = c("European", "European contemporary", "Austrian", "Danish", "Finnish"),
+                   Meats = c("Meats and grills", "Barbecue"),
+                   Modern = c("modern", "Contemporary", "creative", "Fusion", "Modern cuisine", "Creative", "Gastropub", "Innovative"), 
+                   Other = c("International", "Street Food", "Temple cuisine", "Seafood", "Vegetarian", "Classic cuisine", "Market cuisine", "Regional cuisine", "Steakhouse", "Moroccan"), 
+                   Japanese = c("Japanese contemporary", "Sushi", "Teppanyaki", "Japanese"),
+                   Scandinavian = c("Scandinavian"),
+                   Italian = c("Italian", "Italian contemporary"),
+                   Korean = c("Korean", "Korean contemporary"), 
+                   Mediterranean = c("Mediterranean", "Mediterranean cuisine"),
+                   Thai = c("Thai", "Southern Thai", "Thai Contemporary"), 
+                   Indian = c("Indian"), 
+                   Spanish = c("Spanish"), 
+                   Mexican = c("Mexican"))
+  )
+  
+cuisinetype = data %>% 
+  group_by(cuisine_new) %>% 
+  summarize(n = n()) %>%
+  arrange(n) %>%
+  knitr::kable()
+cuisinetype
+```
+
+```{r echo = FALSE, warning=FALSE}
+data = data %>%
+  mutate(
+    Stars = recode(star, "one" = "1", "two" = "2", "three" = "3"))
+```
+
+## Relationship between cuisine type and star ratings
+
+The relationship between new cuisine type and star ratings is shown in the following graph:
+
+```{r echo = FALSE, warning=FALSE}
+data %>%
+  mutate(
+    continent = as.factor(continent),
+    Stars = as.numeric(Stars),
+    year = as.factor(year)) %>%
+  drop_na(continent) %>%
+  group_by(cuisine_new) %>%
+  summarize(avg_star = mean(Stars)) %>%
+  mutate(
+    cuisine_new = as.factor(cuisine_new),
+    cuisine_new = fct_reorder(cuisine_new, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine_new, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
+  labs(
+    title = "Average Rating Stars for each Cuisine type",
+    x = "Average Rating Stars", 
+    y = "Cuisine type"
+  )
+
+continent = data %>%
+  group_by(continent) %>%
+  drop_na(continent) %>%
+  summarize(n())
+```
+
+Among the 19 cuisine types worldwide, French and Korean have the highest rating stars. 
+
+## Separated by continent:
+
+### Asia
+
+```{r echo = FALSE, warning=FALSE}
+Asia = data %>%
+  mutate(
+    continent = as.factor(continent),
+    Stars = as.numeric(Stars),
+    year = as.factor(year)) %>%
+  drop_na(continent) %>%
+  filter(continent == "Asia") %>%
+  group_by(cuisine_new) %>%
+  summarize(avg_star = mean(Stars)) %>%
+  mutate(
+    cuisine_new = as.factor(cuisine_new),
+    cuisine_new = fct_reorder(cuisine_new, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine_new, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
+  labs(
+    title = "Average Rating Stars for each Cuisine type in Asia",
+    x = "Average Rating Stars", 
+    y = "Cuisine type"
+  )
+
+Asia
+```
+
+In Asia, the top two rated cuisine types are still Korean and French, same to the top two rated cuisine types worldwide. 
+
+### Europe
+
+```{r echo = FALSE, warning=FALSE}
+Europe = data %>%
+  mutate(
+    continent = as.factor(continent),
+    Stars = as.numeric(Stars),
+    year = as.factor(year)) %>%
+  drop_na(continent) %>%
+  filter(continent == "Europe") %>%
+  group_by(cuisine_new) %>%
+  summarize(avg_star = mean(Stars)) %>%
+  mutate(
+    cuisine_new = as.factor(cuisine_new),
+    cuisine_new = fct_reorder(cuisine_new, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine_new, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
+  labs(
+    title = "Average Rating Stars for each Cuisine type in Europe",
+    x = "Average Rating Stars", 
+    y = "Cuisine type"
+  )
+
+Europe
+```
+
+In Europe, the top two rated cuisine types are Japanese and French. 
+
+### North America
+
+```{r echo = FALSE, warning=FALSE}
+North_America = data %>%
+  mutate(
+    continent = as.factor(continent),
+    Stars = as.numeric(Stars),
+    year = as.factor(year)) %>%
+  drop_na(continent) %>%
+  filter(continent == "North America") %>%
+  group_by(cuisine_new) %>%
+  summarize(avg_star = mean(Stars)) %>%
+  mutate(
+    cuisine_new = as.factor(cuisine_new),
+    cuisine_new = fct_reorder(cuisine_new, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine_new, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
+  labs(
+    title = "Average Rating Stars for each Cuisine type in North America",
+    x = "Average Rating Stars", 
+    y = "Cuisine type"
+  )
+
+North_America
+```
+
+In North America, the top two rated cuisine types are Scandinavian and Other Asian. 
+
+### South America
+
+```{r echo = FALSE, warning=FALSE}
+South_America = data %>%
+  mutate(
+    continent = as.factor(continent),
+    Stars = as.numeric(Stars),
+    year = as.factor(year)) %>%
+  drop_na(continent) %>%
+  filter(continent == "South America") %>%
+  group_by(cuisine_new) %>%
+  summarize(avg_star = mean(Stars)) %>%
+  mutate(
+    cuisine_new = as.factor(cuisine_new),
+    cuisine_new = fct_reorder(cuisine_new, avg_star)
+  ) %>%
+  ggplot(aes(x = cuisine_new, y = avg_star))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6, hjust = 0.5))+
+  labs(
+    title = "Average Rating Stars for each Cuisine type in South America",
+    x = "Average Rating Stars", 
+    y = "Cuisine type"
+  )
+
+South_America
+```
+
+In South America, the top rated cuisine type is Modern food. 
+
+Overall, French cuisine type has a relatively high star ratings. It was surprising to see that French has the second highest star ratings in Asia, and Other Asian had the highest star ratings in North America. 
+
+
+data2 = data %>%
+  group_by(cuisine_new, star) %>%
+  mutate(Number = summarize(n()))%>%
+  ggplot(aes(x = cuisine_new, y = Number, color = star))+
+  geom_bar(fill = star)
+
+
